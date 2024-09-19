@@ -15,15 +15,16 @@ export const description =
   "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account"
 export default function Dashboard() {
   return (
-    <div style={{paddingTop: "40px"}}>
-    <Card className="mx-auto max-w-sm">
-    <CardHeader>
-      <CardTitle className="text-xl  text-center">Login</CardTitle>
-      <CardDescription>
+   
+    
+    <div className="mx-auto grid w-[350px] gap-6">
+          <div className="grid gap-2 text-center">
+            <h1 className="text-3xl font-bold">Login</h1>
+ 
+      <p className="text-balance text-muted-foreground">
       Enter your email below to login to your account
-      </CardDescription>
-    </CardHeader>
-    <CardContent>
+            </p>
+       </div>
           <div className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
@@ -59,8 +60,8 @@ export default function Dashboard() {
               Sign up
             </Link>
           </div>
-          </CardContent>
-          </Card>
-   </div>
+          </div>
+         
+ 
   )
 }
