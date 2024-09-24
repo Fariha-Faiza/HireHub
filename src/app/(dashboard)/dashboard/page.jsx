@@ -1,25 +1,26 @@
 
+"use client"
 
-import * as React from "react"
-import Link from "next/link"
-import {
-  Bell,
-  Briefcase,
-  Building2,
-  Calendar,
-  ChevronDown,
-  CircleUser,
-  FileText,
-  Home,
-  LineChart,
-  Mail,
-  Search,
-  Settings,
-  Users,
-} from "lucide-react"
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { Bell, ChevronDown, ChevronRight, Menu, Search, User, Briefcase, Users, FileText, Settings, LayoutDashboard, PlusCircle } from "lucide-react"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { 
+  UserPlus,
+  FileCheck
+} from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,223 +29,311 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 export default function Dashboard() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [activeSubmenu, setActiveSubmenu] = useState(null)
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
+  const menuItems = [
+    { name: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, href: "#" },
+    {
+      name: "Jobs",
+      icon: <Briefcase className="h-4 w-4" />,
+      submenu: [
+        { name: "All Jobs", href: "#" },
+        { name: "Active Jobs", href: "#" },
+        { name: "Completed Jobs", href: "#" },
+      ],
+    },
+    { name: "Clients", icon: <Users className="h-4 w-4" />, href: "#" },
+    { name: "Reports", icon: <FileText className="h-4 w-4" />, href: "#" },
+    { name: "Settings", icon: <Settings className="h-4 w-4" />, href: "#" },
+  ]
+  const toggleSubmenu = (submenu) => {
+    setActiveSubmenu(activeSubmenu === submenu ? null : submenu)
+  }
+
+  console.log("menuitems", menuItems.map((x=>x.submenu)) )
   return (
-    <div className="flex h-screen flex-col">
-      <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6 lg:h-[60px]">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Briefcase className="h-6 w-6" />
-          <span className="">HireHub</span>
-        </Link>
-        <div className="flex-1">
-          <form>
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search jobs, candidates..."
-                className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-              />
-            </div>
-          </form>
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <aside className={`${isCollapsed ? 'w-16' : 'w-64'} flex flex-col bg-secondary transition-all duration-300 ease-in-out`}>
+        <div className="p-4 flex items-center justify-between">
+          {!isCollapsed && <h1 className="text-2xl font-bold text-primary">HireHub</h1>}
+          <Button variant="ghost" size="icon" onClick={() => setIsCollapsed(!isCollapsed)}>
+            <Menu className="h-4 w-4" />
+          </Button>
         </div>
-        <Button variant="outline" size="icon" className="shrink-0">
-          <Bell className="h-4 w-4" />
-          <span className="sr-only">Notifications</span>
-        </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon" className="rounded-full">
-              <CircleUser className="h-5 w-5" />
-              <span className="sr-only">User menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </header>
-      <div className="flex flex-1 overflow-hidden">
-        <aside className="w-64 overflow-y-auto border-r bg-muted/40">
-          <nav className="flex flex-col gap-2 p-4">
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Home className="h-4 w-4" />
-              Dashboard
-            </Link>
-            <Accordion type="multiple" className="w-full">
-              <AccordionItem value="jobs">
-                <AccordionTrigger className="py-2 text-sm">
-                  <div className="flex items-center gap-3">
-                    <Briefcase className="h-4 w-4" />
-                    Jobs
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex flex-col gap-2 pl-7">
-                    <Link
-                      href="#"
-                      className="text-sm text-muted-foreground hover:text-primary"
-                    >
-                      All Jobs
-                    </Link>
-                    <Link
-                      href="#"
-                      className="text-sm text-muted-foreground hover:text-primary"
-                    >
-                      Create Job
-                    </Link>
-                    <Link
-                      href="#"
-                      className="text-sm text-muted-foreground hover:text-primary"
-                    >
-                      Job Categories
-                    </Link>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="candidates">
-                <AccordionTrigger className="py-2 text-sm">
-                  <div className="flex items-center gap-3">
-                    <Users className="h-4 w-4" />
-                    Candidates
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex flex-col gap-2 pl-7">
-                    <Link
-                      href="#"
-                      className="text-sm text-muted-foreground hover:text-primary"
-                    >
-                      All Candidates
-                    </Link>
-                    <Link
-                      href="#"
-                      className="text-sm text-muted-foreground hover:text-primary"
-                    >
-                      Shortlisted
-                    </Link>
-                    <Link
-                      href="#"
-                      className="text-sm text-muted-foreground hover:text-primary"
-                    >
-                      Interviews
-                    </Link>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Building2 className="h-4 w-4" />
-              Companies
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Calendar className="h-4 w-4" />
-              Calendar
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Mail className="h-4 w-4" />
-              Messages
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <LineChart className="h-4 w-4" />
-              Analytics
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Settings className="h-4 w-4" />
-              Settings
-            </Link>
-          </nav>
-        </aside>
-        <main className="flex-1 overflow-y-auto p-6">
-          <h1 className="mb-4 text-2xl font-bold">Job Management Dashboard</h1>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              { title: "Active Jobs", icon: <Briefcase className="h-4 w-4" /> },
-              { title: "Total Applicants", icon: <Users className="h-4 w-4" /> },
-              { title: "Interviews Scheduled", icon: <Calendar className="h-4 w-4" /> },
-              { title: "Positions Filled", icon: <FileText className="h-4 w-4" /> },
-            ].map((item) => (
-              <div key={item.title} className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm">
-                <div className="flex items-center justify-between">
-                  <h2 className="font-semibold">{item.title}</h2>
-                  {item.icon}
-                </div>
-                <p className="mt-2 text-2xl font-bold">{Math.floor(Math.random() * 100)}</p>
+        <nav className="flex-1 overflow-y-auto">
+          <TooltipProvider>
+            {menuItems.map((item, index) => (
+              <div key={index}>
+                {item.submenu ? (
+                  <Collapsible>
+                    <CollapsibleTrigger asChild>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() => toggleSubmenu(item.name)}
+                            className={`flex items-center w-full px-4 py-2 text-sm font-medium text-gray-600 hover:bg-accent hover:text-accent-foreground ${isCollapsed ? 'justify-center' : ''}`}
+                          >
+                            {item.icon}
+                            {!isCollapsed && (
+                              <>
+                                <span className="ml-2">{item.name}</span>
+                                {activeSubmenu === item.name ? (
+                                  <ChevronDown className="ml-auto h-4 w-4" />
+                                ) : (
+                                  <ChevronRight className="ml-auto h-4 w-4" />
+                                )}
+                              </>
+                            )}
+                          </button>
+                        </TooltipTrigger>
+                        {isCollapsed && <TooltipContent side="right">{item.name}</TooltipContent>}
+                      </Tooltip>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      {!isCollapsed && activeSubmenu === item.name && (
+                        <div className="pl-6 bg-background">
+                          {item.submenu.map((subItem, subIndex) => (
+                            <Link
+                              key={subIndex}
+                              href={subItem.href}
+                              className="block px-4 py-2 text-sm text-gray-600 hover:bg-accent hover:text-accent-foreground"
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </CollapsibleContent>
+
+                    {/* <div onClick={() =>toggleSubmenu('Jobs')} className="menu-item cursor-pointer">
+          Jobs
+        </div>
+        {activeSubmenu === 'Jobs' && (
+          <div className="pl-4">
+            <Link href="#" className="submenu-item">All Jobs</Link>
+            <Link href="#" className="submenu-item">Create Job</Link>
+            <Link href="#" className="submenu-item">Job Categories</Link>
+          </div>
+        )}
+      </div> */}
+                  </Collapsible>
+                ) : (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href={item.href}
+                        className={`flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-accent hover:text-accent-foreground ${isCollapsed ? 'justify-center' : ''}`}
+                      >
+                        {item.icon}
+                        {!isCollapsed && <span className="ml-2">{item.name}</span>}
+                      </Link>
+                    </TooltipTrigger>
+                    {isCollapsed && <TooltipContent side="right">{item.name}</TooltipContent>}
+                  </Tooltip>
+                )}
               </div>
             ))}
+          </TooltipProvider>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="bg-white border-b flex items-center justify-between p-4">
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleSidebar}>
+              <Menu className="h-6 w-6" />
+            </Button>
+            <h1 className="text-2xl font-semibold">Dashboard</h1>
           </div>
-          <h2 className="mb-4 mt-8 text-xl font-semibold">Recent Job Postings</h2>
-          <div className="rounded-lg border">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b bg-muted/50">
-                    <th className="px-4 py-2 text-left font-medium">Job Title</th>
-                    <th className="px-4 py-2 text-left font-medium">Company</th>
-                    <th className="px-4 py-2 text-left font-medium">Location</th>
-                    <th className="px-4 py-2 text-left font-medium">Applicants</th>
-                    <th className="px-4 py-2 text-left font-medium">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { title: "Software Engineer", company: "TechCorp", location: "Remote", applicants: 45, status: "Active" },
-                    { title: "Product Manager", company: "InnovateCo", location: "New York, NY", applicants: 32, status: "Active" },
-                    { title: "UX Designer", company: "DesignHub", location: "San Francisco, CA", applicants: 28, status: "Closed" },
-                    { title: "Data Analyst", company: "DataDrive", location: "Chicago, IL", applicants: 19, status: "Active" },
-                    { title: "Marketing Specialist", company: "GrowthInc", location: "Austin, TX", applicants: 37, status: "Active" },
-                  ].map((job, i) => (
-                    <tr key={i} className="border-b">
-                      <td className="px-4 py-2">{job.title}</td>
-                      <td className="px-4 py-2">{job.company}</td>
-                      <td className="px-4 py-2">{job.location}</td>
-                      <td className="px-4 py-2">{job.applicants}</td>
-                      <td className="px-4 py-2">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                          job.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {job.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+       
+          
+            <div className="flex items-center space-x-4">
+            <div className="relative hidden md:block">
+              <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="pl-8 w-[200px] md:w-[300px]"
+              />
             </div>
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+              <span className="sr-only">Notifications</span>
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <User className="h-5 w-5" />
+                  <span className="sr-only">User menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
+          
+        </header>
+
+        {/* Main content area */}
+        <main className="bg-white flex-1 overflow-y-auto p-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Active Jobs
+                </CardTitle>
+                <Briefcase className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">24</div>
+                <p className="text-xs text-muted-foreground">
+                  +2 from last week
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Total Candidates
+                </CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">1,429</div>
+                <p className="text-xs text-muted-foreground">
+                  +201 from last month
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  New Applications
+                </CardTitle>
+                <UserPlus className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">89</div>
+                <p className="text-xs text-muted-foreground">
+                  +9% from yesterday
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Interviews Scheduled
+                </CardTitle>
+                <FileCheck className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">18</div>
+                <p className="text-xs text-muted-foreground">
+                  For the next 7 days
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <h2 className="text-2xl font-semibold mt-8 mb-4">Open Job Listings</h2>
+          <Card>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Job Title</TableHead>
+                    <TableHead>Department</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Applications</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium">Senior React Developer</TableCell>
+                    <TableCell>Engineering</TableCell>
+                    <TableCell>Remote</TableCell>
+                    <TableCell>42</TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                        Active
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Product Manager</TableCell>
+                    <TableCell>Product</TableCell>
+                    <TableCell>New York, NY</TableCell>
+                    <TableCell>28</TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                        Active
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">UX Designer</TableCell>
+                    <TableCell>Design</TableCell>
+                    <TableCell>San Francisco, CA</TableCell>
+                    <TableCell>35</TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                        Active
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Sales Representative</TableCell>
+                    <TableCell>Sales</TableCell>
+                    <TableCell>Chicago, IL</TableCell>
+                    <TableCell>19</TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                        Active
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Marketing Specialist</TableCell>
+                    <TableCell>Marketing</TableCell>
+                    <TableCell>Remote</TableCell>
+                    <TableCell>23</TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                        Active
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </main>
       </div>
     </div>
   )
 }
+
+
