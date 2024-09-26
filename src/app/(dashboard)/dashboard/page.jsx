@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 import {
   Table,
   TableBody,
@@ -40,6 +41,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import LeftSidebar from '@/components/ui/layout/leftSidebar'
+
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -68,89 +71,8 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className={`${isCollapsed ? 'w-16' : 'w-64'} flex flex-col bg-secondary transition-all duration-300 ease-in-out`}>
-        <div className="p-4 flex items-center justify-between">
-          {!isCollapsed && <h1 className="text-2xl font-bold text-primary">HireHub</h1>}
-          <Button variant="ghost" size="icon" onClick={() => setIsCollapsed(!isCollapsed)}>
-            <Menu className="h-4 w-4" />
-          </Button>
-        </div>
-        <nav className="flex-1 overflow-y-auto">
-          <TooltipProvider>
-            {menuItems.map((item, index) => (
-              <div key={index}>
-                {item.submenu ? (
-                  <Collapsible>
-                    <CollapsibleTrigger asChild>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            onClick={() => toggleSubmenu(item.name)}
-                            className={`flex items-center w-full px-4 py-2 text-sm font-medium text-gray-600 hover:bg-accent hover:text-accent-foreground ${isCollapsed ? 'justify-center' : ''}`}
-                          >
-                            {item.icon}
-                            {!isCollapsed && (
-                              <>
-                                <span className="ml-2">{item.name}</span>
-                                {activeSubmenu === item.name ? (
-                                  <ChevronDown className="ml-auto h-4 w-4" />
-                                ) : (
-                                  <ChevronRight className="ml-auto h-4 w-4" />
-                                )}
-                              </>
-                            )}
-                          </button>
-                        </TooltipTrigger>
-                        {isCollapsed && <TooltipContent side="right">{item.name}</TooltipContent>}
-                      </Tooltip>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      {!isCollapsed && activeSubmenu === item.name && (
-                        <div className="pl-6 bg-background">
-                          {item.submenu.map((subItem, subIndex) => (
-                            <Link
-                              key={subIndex}
-                              href={subItem.href}
-                              className="block px-4 py-2 text-sm text-gray-600 hover:bg-accent hover:text-accent-foreground"
-                            >
-                              {subItem.name}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </CollapsibleContent>
-
-                    {/* <div onClick={() =>toggleSubmenu('Jobs')} className="menu-item cursor-pointer">
-          Jobs
-        </div>
-        {activeSubmenu === 'Jobs' && (
-          <div className="pl-4">
-            <Link href="#" className="submenu-item">All Jobs</Link>
-            <Link href="#" className="submenu-item">Create Job</Link>
-            <Link href="#" className="submenu-item">Job Categories</Link>
-          </div>
-        )}
-      </div> */}
-                  </Collapsible>
-                ) : (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Link
-                        href={item.href}
-                        className={`flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-accent hover:text-accent-foreground ${isCollapsed ? 'justify-center' : ''}`}
-                      >
-                        {item.icon}
-                        {!isCollapsed && <span className="ml-2">{item.name}</span>}
-                      </Link>
-                    </TooltipTrigger>
-                    {isCollapsed && <TooltipContent side="right">{item.name}</TooltipContent>}
-                  </Tooltip>
-                )}
-              </div>
-            ))}
-          </TooltipProvider>
-        </nav>
-      </aside>
+      <LeftSidebar/>
+     
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">

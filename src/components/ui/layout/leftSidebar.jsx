@@ -1,4 +1,5 @@
-"use client"
+
+
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { Bell, ChevronDown, ChevronRight, Menu, Search, User, Briefcase, Users, FileText, Settings, LayoutDashboard, PlusCircle } from "lucide-react"
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 import {
   Table,
   TableBody,
@@ -38,31 +40,32 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-export default function leftSidebar() {
+const LeftSidebar = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [isCollapsed, setIsCollapsed] = useState(false)
-  const [activeSubmenu, setActiveSubmenu] = useState(null)
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
-  const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, href: "#" },
-    {
-      name: "Jobs",
-      icon: <Briefcase className="h-4 w-4" />,
-      submenu: [
-        { name: "All Jobs", href: "#" },
-        { name: "Active Jobs", href: "#" },
-        { name: "Completed Jobs", href: "#" },
-      ],
-    },
-    { name: "Clients", icon: <Users className="h-4 w-4" />, href: "#" },
-    { name: "Reports", icon: <FileText className="h-4 w-4" />, href: "#" },
-    { name: "Settings", icon: <Settings className="h-4 w-4" />, href: "#" },
-  ]
-  const toggleSubmenu = (submenu) => {
-    setActiveSubmenu(activeSubmenu === submenu ? null : submenu)
-  }
+    const [activeSubmenu, setActiveSubmenu] = useState(null)
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
+    const menuItems = [
+      { name: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, href: "#" },
+      {
+        name: "Jobs",
+        icon: <Briefcase className="h-4 w-4" />,
+        submenu: [
+          { name: "All Jobs", href: "#" },
+          { name: "Active Jobs", href: "#" },
+          { name: "Completed Jobs", href: "#" },
+        ],
+      },
+      { name: "Clients", icon: <Users className="h-4 w-4" />, href: "#" },
+      { name: "Reports", icon: <FileText className="h-4 w-4" />, href: "#" },
+      { name: "Settings", icon: <Settings className="h-4 w-4" />, href: "#" },
+    ]
+    const toggleSubmenu = (submenu) => {
+      setActiveSubmenu(activeSubmenu === submenu ? null : submenu)
+    }
   return (
     <div>
-      <aside className={`${isCollapsed ? 'w-16' : 'w-64'} flex flex-col bg-secondary transition-all duration-300 ease-in-out`}>
+       <aside className={`${isCollapsed ? 'w-16' : 'w-64'} flex flex-col bg-secondary transition-all duration-300 ease-in-out`}>
         <div className="p-4 flex items-center justify-between">
           {!isCollapsed && <h1 className="text-2xl font-bold text-primary">HireHub</h1>}
           <Button variant="ghost" size="icon" onClick={() => setIsCollapsed(!isCollapsed)}>
@@ -98,7 +101,7 @@ export default function leftSidebar() {
                         {isCollapsed && <TooltipContent side="right">{item.name}</TooltipContent>}
                       </Tooltip>
                     </CollapsibleTrigger>
-                 
+                    <CollapsibleContent >
                       {!isCollapsed && activeSubmenu === item.name && (
                         <div className="pl-6 bg-background">
                           {item.submenu.map((subItem, subIndex) => (
@@ -113,7 +116,7 @@ export default function leftSidebar() {
                         </div>
                       )}
                   
-
+                  </CollapsibleContent>
                   
                   </Collapsible>
                 ) : (
@@ -138,3 +141,5 @@ export default function leftSidebar() {
     </div>
   )
 }
+
+export default LeftSidebar
