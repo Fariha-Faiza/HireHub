@@ -11,7 +11,7 @@ export default function layout({ children }) {
     
       <div className="hidden bg-muted lg:block">
         <Image
-          src="/hire.jpeg"
+          src="/OIG3.8zWN85.jpeg"
           alt="Image"
           width="1920"
           height="1080"
