@@ -67,7 +67,7 @@ export default function Dashboard() {
     setActiveSubmenu(activeSubmenu === submenu ? null : submenu)
   }
 
-  console.log("menuitems", menuItems.map((x=>x.submenu)) )
+ 
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
